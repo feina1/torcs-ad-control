@@ -4,7 +4,6 @@ from gym_torcs import TorcsEnv
 from sample_agent import Agent
 import numpy as np
 
-vision = True
 episode_count = 10
 max_steps = 50
 reward = 0
@@ -12,9 +11,8 @@ done = False
 step = 0
 
 # Generate a Torcs environment
-env = TorcsEnv(vision=vision, throttle=False)
+env = TorcsEnv(throttle=True)
 
-agent = Agent(1)  # steering only
 
 
 print("TORCS Experiment Start.")
@@ -27,21 +25,21 @@ for i in range(episode_count):
     else:
         ob = env.reset()
 
-    total_reward = 0.
     for j in range(max_steps):
-        action = agent.act(ob, reward, done, vision)
-
-        ob, reward, done, _ = env.step(action)
-        #print(ob)
-        total_reward += reward
-
+        print(j)
+        # action = agent.act
+        steer =0
+        acc =0.2
+        brk =0
+        if j>20:
+            acc=0
+            brk =1
+        action = np.array([steer,acc,brk])
+        ob, _, done, _ = env.step(action)
         step += 1
         if done:
             break
-
-    print("TOTAL REWARD @ " + str(i) +" -th Episode  :  " + str(total_reward))
     print("Total Step: " + str(step))
-    print("")
 
 env.end()  # This is for shutting down TORCS
 print("Finish.")
